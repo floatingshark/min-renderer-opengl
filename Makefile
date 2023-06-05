@@ -11,10 +11,10 @@ TARGET_DEBUG := $(DBG_DIR)/$(TARGET_NAME)
 
 CXX := g++
 CXXFLAGS := -std=c++17 -Wall -Wextra -O0 -ggdb3
-INCLUDE := -I./include -I./include/imgui -I"C:\opencv\install\include"
+INCLUDE := -I./include -I./library -I"C:\opencv\install\include"
 
 LDFLAGS := 
-LIBDIR := -L"C:\opencv\lib" -L"./library"
+LIBDIR := -L"./library" -L"C:\opencv\lib"
 LIBS := -lglfw3 -lopengl32 -lgdi32 -lglew32 -lopencv_core470 -lopencv_highgui470 -lopencv_imgproc470 -lopencv_imgcodecs470
 
 $(TARGET): $(OBJS)
