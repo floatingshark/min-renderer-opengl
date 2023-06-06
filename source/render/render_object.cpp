@@ -8,7 +8,7 @@
 RenderObject::RenderObject()
 {
 	shape = std::make_shared<RenderShape>();
-	shader = std::make_shared<ShaderStandard>();
+	shader = std::make_shared<ShadingBlinnPhong>();
 
 	refreshShape();
 }

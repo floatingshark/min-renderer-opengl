@@ -21,13 +21,13 @@ enum class TextureType
 /**
  *  shader
  */
-class ShaderStandard
+class ShadingBlinnPhong
 {
 public:
-	ShaderStandard();
-	~ShaderStandard(){};
-	ShaderStandard(ShaderStandard const &) = delete;
-	ShaderStandard &operator=(ShaderStandard const &) = delete;
+	ShadingBlinnPhong();
+	~ShadingBlinnPhong(){};
+	ShadingBlinnPhong(ShadingBlinnPhong const &) = delete;
+	ShadingBlinnPhong &operator=(ShadingBlinnPhong const &) = delete;
 
 	void update();
 	void draw() const;
@@ -75,8 +75,8 @@ public:
 protected:
 	// shader
 	GLuint shader_program;
-	const char *vert_shader_name = "shader/standard_vert.glsl";
-	const char *frag_shader_name = "shader/standard_frag.glsl";
+	const char *vert_shader_name = "shader/blinn_phong_vert.glsl";
+	const char *frag_shader_name = "shader/blinn_phong_frag.glsl";
 
 	// attribute object
 	GLuint vertex_array_object;

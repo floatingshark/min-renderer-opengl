@@ -10,7 +10,7 @@
 #include "render/object_hub.hpp"
 #include "render/render_shape.hpp"
 #include "render/render_utility.hpp"
-#include "render/shader_standard.hpp"
+#include "shading/shading_blinn_phong.hpp"
 #include "ui/glfw_display.hpp"
 #include "ui/imgui_display.hpp"
 

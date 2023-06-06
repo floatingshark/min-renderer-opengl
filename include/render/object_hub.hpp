@@ -9,7 +9,7 @@
 
 #include "render/render_object.hpp"
 #include "render/render_shape.hpp"
-#include "shader_standard.hpp"
+#include "shading/shading_blinn_phong.hpp"
 
 class GLFWdisplay;
 

@@ -1,10 +1,10 @@
-#include "render/shader_standard.hpp"
+#include "shading/shading_blinn_phong.hpp"
 #include "render/render_utility.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/matrix_operation.hpp"
 
-ShaderStandard::ShaderStandard()
+ShadingBlinnPhong::ShadingBlinnPhong()
 {
     setShaderProgram(vert_shader_name, frag_shader_name);
 
@@ -12,12 +12,12 @@ ShaderStandard::ShaderStandard()
     initializeUniformLocations();
 }
 
-void ShaderStandard::setShaderProgram(const char *vert_shader_name, const char *frag_shader_name)
+void ShadingBlinnPhong::setShaderProgram(const char *vert_shader_name, const char *frag_shader_name)
 {
     shader_program = RenderUtility::loadShaderProgram(vert_shader_name, frag_shader_name);
 }
 
-void ShaderStandard::update()
+void ShadingBlinnPhong::update()
 {
     // shaderを使用
     glUseProgram(shader_program);
@@ -33,7 +33,7 @@ void ShaderStandard::update()
     bindContext();
 }
 
-void ShaderStandard::draw() const
+void ShadingBlinnPhong::draw() const
 {
     switch (draw_type)
     {
@@ -51,11 +51,11 @@ void ShaderStandard::draw() const
     }
 }
 
-void ShaderStandard::calculateAttribute()
+void ShadingBlinnPhong::calculateAttribute()
 {
 }
 
-void ShaderStandard::assignAttribute()
+void ShadingBlinnPhong::assignAttribute()
 {
     // 各頂点データを結合
     std::vector<GLfloat> vertex_context;
@@ -89,7 +89,7 @@ void ShaderStandard::assignAttribute()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertex_index.size() * sizeof(GLuint), &vertex_index[0], GL_STATIC_DRAW);
 }
 
-void ShaderStandard::initializeUniformVariables()
+void ShadingBlinnPhong::initializeUniformVariables()
 {
     setMaterialAmbient({1.f, 1.f, 1.f});
     setMaterialDiffusion({1.f, 1.f, 1.f});
@@ -102,7 +102,7 @@ void ShaderStandard::initializeUniformVariables()
     setBaseColor(TextureType::Normal, {128, 128, 255});
 }
 
-void ShaderStandard::initializeUniformLocations()
+void ShadingBlinnPhong::initializeUniformLocations()
 {
     model_matrix_location = glGetUniformLocation(shader_program, "u_m4_model_matrix");
     view_matrix_location = glGetUniformLocation(shader_program, "u_m4_view_matrix");
@@ -122,7 +122,7 @@ void ShaderStandard::initializeUniformLocations()
     normal_texture_location = glGetUniformLocation(shader_program, "u_i_normal_texture");
 }
 
-void ShaderStandard::assignUniform()
+void ShadingBlinnPhong::assignUniform()
 {
     projection_matrix = glm::perspective(glm::radians(60.f), 4.f / 3.f, 0.1f, 100.f);
     const glm::mat3 m4_matrix = glm::mat3(model_matrix);
@@ -148,13 +148,13 @@ void ShaderStandard::assignUniform()
     glUniform1i(normal_texture_location, 1);
 }
 
-void ShaderStandard::bindContext() const
+void ShadingBlinnPhong::bindContext() const
 {
     // 使用するvaoを指定する
     glBindVertexArray(vertex_array_object);
 }
 
-void ShaderStandard::errorCheck() const
+void ShadingBlinnPhong::errorCheck() const
 {
     // error checker
     auto err = glGetError();
@@ -164,22 +164,22 @@ void ShaderStandard::errorCheck() const
     }
 }
 
-void ShaderStandard::drawPoints() const
+void ShadingBlinnPhong::drawPoints() const
 {
     glDrawElements(GL_POINTS, vertex_index.size(), GL_UNSIGNED_INT, 0);
 }
 
-void ShaderStandard::drawLines() const
+void ShadingBlinnPhong::drawLines() const
 {
     glDrawElements(GL_LINE_STRIP, vertex_index.size(), GL_UNSIGNED_INT, 0);
 }
 
-void ShaderStandard::drawTriangles() const
+void ShadingBlinnPhong::drawTriangles() const
 {
     glDrawElements(GL_TRIANGLES, vertex_index.size(), GL_UNSIGNED_INT, 0);
 }
 
-void ShaderStandard::setBaseColor(TextureType tex_type, const std::vector<unsigned char> base_color)
+void ShadingBlinnPhong::setBaseColor(TextureType tex_type, const std::vector<unsigned char> base_color)
 {
     removeTexture(tex_type);
 
@@ -196,7 +196,7 @@ void ShaderStandard::setBaseColor(TextureType tex_type, const std::vector<unsign
     }
 }
 
-void ShaderStandard::setTexture(TextureType tex_type, const char *texture_name)
+void ShadingBlinnPhong::setTexture(TextureType tex_type, const char *texture_name)
 {
     removeTexture(tex_type);
     std::vector<unsigned char> texture_data = RenderUtility::loadTexturePng(texture_name);
@@ -213,7 +213,7 @@ void ShaderStandard::setTexture(TextureType tex_type, const char *texture_name)
     }
 }
 
-void ShaderStandard::removeTexture(TextureType tex_type)
+void ShadingBlinnPhong::removeTexture(TextureType tex_type)
 {
     switch (tex_type)
     {

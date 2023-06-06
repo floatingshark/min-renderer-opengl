@@ -3,7 +3,7 @@ OBJ_DIR := intermediate
 TARGET_DIR := bin
 TARGET_NAME := main.exe
 
-VAR := $(SRC_DIR)/*.cpp $(SRC_DIR)/imgui/*.cpp $(SRC_DIR)/render/*.cpp $(SRC_DIR)/ui/*.cpp
+VAR := $(SRC_DIR)/*.cpp $(SRC_DIR)/imgui/*.cpp $(SRC_DIR)/render/*.cpp $(SRC_DIR)/ui/*.cpp $(SRC_DIR)/shading/*.cpp
 SRCS := $(wildcard $(VAR))
 OBJS := $(addprefix $(OBJ_DIR)/, $(subst source/,,$(SRCS:.cpp=.o)))
 TARGET := $(TARGET_DIR)/$(TARGET_NAME)
@@ -23,12 +23,12 @@ $(TARGET): $(OBJS)
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c -o $@ $<
 
-CLEAN_DIR := $(OBJ_DIR)/*.o $(OBJ_DIR)/render/*.o $(OBJ_DIR)/ui/*o
+CLEAN_DIR := $(OBJ_DIR)/*.o $(OBJ_DIR)/render/*.o $(OBJ_DIR)/ui/*o $(OBJ_DIR)/shading/*.o
 CLEANS := $(wildcard $(CLEAN_DIR))
 clean:
 	del $(subst /,\,$(CLEANS))
 
-CLEAN_ALL_DIR := $(OBJ_DIR)/*.o $(OBJ_DIR)/render/*.o $(OBJ_DIR)/ui/*o $(OBJ_DIR)/imgui/*.o
+CLEAN_ALL_DIR := $(OBJ_DIR)/*.o $(OBJ_DIR)/render/*.o $(OBJ_DIR)/ui/*o $(OBJ_DIR)/shading/*.o $(OBJ_DIR)/imgui/*.o
 CLEAN_ALLS := $(wildcard $(CLEAN_ALL_DIR))
 
 clean-all:

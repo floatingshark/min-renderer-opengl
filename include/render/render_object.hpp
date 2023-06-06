@@ -8,7 +8,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "render/render_shape.hpp"
-#include "shader_standard.hpp"
+#include "shading/shading_blinn_phong.hpp"
 
 /**
  * each object in renderer
@@ -25,7 +25,7 @@ public:
 	void refreshShape();
 
 	inline std::shared_ptr<RenderShape> getShape() { return shape; };
-	inline std::shared_ptr<ShaderStandard> getShader() { return shader; };
+	inline std::shared_ptr<ShadingBlinnPhong> getShader() { return shader; };
 
 	inline std::vector<float> getPosition() const { return position; };
 	inline void setPosition(const std::vector<float> new_position) { position = new_position; };
@@ -39,7 +39,7 @@ public:
 
 protected:
 	std::shared_ptr<RenderShape> shape;
-	std::shared_ptr<ShaderStandard> shader;
+	std::shared_ptr<ShadingBlinnPhong> shader;
 
 	std::vector<float> position = {0.f, 0.f, 0.f};
 	std::vector<float> rotation = {0.f, 0.f, 0.f};
