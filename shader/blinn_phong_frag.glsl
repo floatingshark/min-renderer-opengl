@@ -7,8 +7,6 @@ const uint _ui_light_count = 1;
 uniform vec3 u_f3_camera_position;
 uniform vec4 u_f4_light_position[_ui_light_count];
 uniform vec3 u_f3_light_ambient[_ui_light_count];
-uniform vec3 u_f3_light_diffusion[_ui_light_count];
-uniform vec3 u_f3_light_specular[_ui_light_count];
 uniform vec3 u_f3_material_ambient;
 uniform vec3 u_f3_material_diffusion;
 uniform vec3 u_f3_material_specular;
@@ -42,14 +40,17 @@ void main()
 
 		// ambient & difusion
 		vec3 _f3_ambient = u_f3_material_ambient * u_f3_light_ambient[i];
-		_v_f3_total_diffusion += max(dot(_v_f3_normal_map_world, _v_f3_light_from_vertex_world), 0.0) * u_f3_material_diffusion * u_f3_light_diffusion[i] + _f3_ambient;
+		_v_f3_total_diffusion += max(dot(_v_f3_normal_map_world, _v_f3_light_from_vertex_world), 0.0) * u_f3_material_diffusion + _f3_ambient;
 		
 		// specular
 		vec3 _v_f3_phong = normalize(_v_f3_light_from_vertex_world + _v_f3_view_from_vertex_world);
-	    _v_f3_total_specular += pow(max(dot(normalize(_v_f3_normal_map_world), _v_f3_phong), 0.0), u_f_material_shiness) * u_f3_material_specular * u_f3_light_specular[i];
+	    _v_f3_total_specular += pow(max(dot(normalize(_v_f3_normal_map_world), _v_f3_phong), 0.0), u_f_material_shiness) * u_f3_material_specular;
 	}
 
 	// sum light and multiply texture
 	_v_f3_total_diffusion = _v_f3_total_diffusion * vec3(texture2D(u_i_texture, v_out_f2_uv));
 	f_out_f4_fragment = vec4(_v_f3_total_diffusion + _v_f3_total_specular, 1.0);
+	
+	// for debug
+	//f_out_f4_fragment = vec4(1.0, 1.0, 1.0, 1.0);
 }

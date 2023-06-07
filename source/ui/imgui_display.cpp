@@ -2,10 +2,11 @@
 #include "ui/glfw_display.hpp"
 #include "render/object_hub.hpp"
 #include "render/render_utility.hpp"
+#include "shading/shading_base.hpp"
+#include "shading/shading_blinn_phong.hpp"
 
 #include <string>
 #include <filesystem>
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -35,7 +36,7 @@ void ImGuiDisplay::draw()
 	ImGui::NewFrame();
 
 	bool show_x = false;
-	const ImGuiWindowFlags main_window_flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar/*| ImGuiWindowFlags_MenuBar*/;
+	const ImGuiWindowFlags main_window_flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar /*| ImGuiWindowFlags_MenuBar*/;
 	ImGui::Begin("Config Window", &show_x, main_window_flags);
 	ImGui::SeparatorText("Config List");
 	ImGui::Text("OPENGL RENDERER");
@@ -172,12 +173,6 @@ void ImGuiDisplay::drawLight()
 		ImGui::Text("Amb");
 		ImGui::SameLine();
 		ImGui::DragFloat3("##light_ambient", object_hub->light_ambient, 0.1f, 0.f, 1.f, "%.2f");
-		ImGui::Text("Dif");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##light_diffusion", object_hub->light_diffusion, 0.1f, 0.f, 1.f, "%.2f");
-		ImGui::Text("Spe");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##light_specular", object_hub->light_specular, 0.1f, -0.f, 1.f, "%.2f");
 		ImGui::TreePop();
 	}
 }
@@ -257,33 +252,38 @@ void ImGuiDisplay::drawObjectWindow()
 
 		if (ImGui::TreeNode("Material"))
 		{
-			ImGui::Text("Amb");
-			ImGui::SameLine();
-			static std::vector<GLfloat> material_ambient = object->getShader()->getMaterialAmbient();
-			if (ImGui::DragFloat3("##material_ambient", material_ambient.data(), 0.01f, 0.f, 1.f))
+			// blinn phong material settings
+			ShadingBlinnPhong *bp_shader = static_cast<ShadingBlinnPhong *>(object->getShader().get());
+			if (bp_shader != nullptr)
 			{
-				object->getShader()->setMaterialAmbient(material_ambient);
-			}
-			ImGui::Text("Dif");
-			ImGui::SameLine();
-			static std::vector<GLfloat> material_diffusion = object->getShader()->getMaterialDiffusion();
-			if (ImGui::DragFloat3("##material_diffusion", material_diffusion.data(), 0.01f, 0.f, 1.f))
-			{
-				object->getShader()->setMaterialDiffusion(material_diffusion);
-			}
-			ImGui::Text("Spe");
-			ImGui::SameLine();
-			static std::vector<GLfloat> material_specular = object->getShader()->getMaterialDiffusion();
-			if (ImGui::DragFloat3("##material_specular", material_specular.data(), 0.01f, 0.f, 1.f))
-			{
-				object->getShader()->setMaterialSpecular(material_specular);
-			}
-			ImGui::Text("Shi");
-			ImGui::SameLine();
-			static GLfloat material_shiness = object->getShader()->getMaterialShiness();
-			if (ImGui::DragFloat("##material_shiness", &material_shiness, 0.1f, 0.f, 100.f))
-			{
-				object->getShader()->setMaterialShiness(material_shiness);
+				ImGui::Text("Amb");
+				ImGui::SameLine();
+				static std::vector<GLfloat> material_ambient = bp_shader->getMaterialAmbient();
+				if (ImGui::DragFloat3("##material_ambient", material_ambient.data(), 0.01f, 0.f, 1.f))
+				{
+					bp_shader->setMaterialAmbient(material_ambient);
+				}
+				ImGui::Text("Dif");
+				ImGui::SameLine();
+				static std::vector<GLfloat> material_diffusion = bp_shader->getMaterialDiffusion();
+				if (ImGui::DragFloat3("##material_diffusion", material_diffusion.data(), 0.01f, 0.f, 1.f))
+				{
+					bp_shader->setMaterialDiffusion(material_diffusion);
+				}
+				ImGui::Text("Spe");
+				ImGui::SameLine();
+				static std::vector<GLfloat> material_specular = bp_shader->getMaterialDiffusion();
+				if (ImGui::DragFloat3("##material_specular", material_specular.data(), 0.01f, 0.f, 1.f))
+				{
+					bp_shader->setMaterialSpecular(material_specular);
+				}
+				ImGui::Text("Shi");
+				ImGui::SameLine();
+				static GLfloat material_shiness = bp_shader->getMaterialShiness();
+				if (ImGui::DragFloat("##material_shiness", &material_shiness, 0.1f, 0.f, 100.f))
+				{
+					bp_shader->setMaterialShiness(material_shiness);
+				}
 			}
 			ImGui::TreePop();
 		}

@@ -40,10 +40,6 @@ void ObjectHub::update()
 		object->getShader()->setLightPosition(l_pos);
 		std::vector<GLfloat> l_amb(std::begin(light_ambient), std::end(light_ambient));
 		object->getShader()->setLightAmbient(l_amb);
-		std::vector<GLfloat> l_diff(std::begin(light_diffusion), std::end(light_diffusion));
-		object->getShader()->setLightDiffusion(l_diff);
-		std::vector<GLfloat> l_spec(std::begin(light_specular), std::end(light_specular));
-		object->getShader()->setLightSpecular(l_spec);
 
 		object->update();
 	}
