@@ -1,4 +1,4 @@
-#include "render/object_hub.hpp"
+#include "render/render_scene.hpp"
 
 #include <iostream>
 #include <vector>
@@ -7,14 +7,14 @@
 
 #include "ui/glfw_display.hpp"
 
-ObjectHub::ObjectHub()
+RenderScene::RenderScene()
 {
 	initialize();
 }
 
-ObjectHub::~ObjectHub() {}
+RenderScene::~RenderScene() {}
 
-void ObjectHub::initialize()
+void RenderScene::initialize()
 {
 	objects.clear();
 
@@ -24,7 +24,7 @@ void ObjectHub::initialize()
 	objects.push_back(init_cube_object);
 }
 
-void ObjectHub::update()
+void RenderScene::update()
 {
 	// 管理しているオブジェクトを更新
 	for (std::shared_ptr<RenderObject> &object : objects)

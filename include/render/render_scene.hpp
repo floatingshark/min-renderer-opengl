@@ -16,13 +16,13 @@ class GLFWdisplay;
 /**
  * object management
 */
-class ObjectHub
+class RenderScene
 {
 public:
-	ObjectHub();
-	~ObjectHub();
-	ObjectHub(ObjectHub const &) = delete;
-	ObjectHub &operator=(ObjectHub const &) = delete;
+	RenderScene();
+	~RenderScene();
+	RenderScene(RenderScene const &) = delete;
+	RenderScene &operator=(RenderScene const &) = delete;
 
 	float light_position[4] = {10.f, 10.f, 10.f, 1.0f};
 	float light_ambient[3] = {0.03f, 0.03f, 0.03f};

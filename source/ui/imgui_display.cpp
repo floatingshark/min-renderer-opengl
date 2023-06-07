@@ -1,6 +1,6 @@
 #include "ui/imgui_display.hpp"
 #include "ui/glfw_display.hpp"
-#include "render/object_hub.hpp"
+#include "render/render_scene.hpp"
 #include "render/render_utility.hpp"
 #include "shading/shading_base.hpp"
 #include "shading/shading_blinn_phong.hpp"
@@ -42,7 +42,7 @@ void ImGuiDisplay::draw()
 	ImGui::Text("OPENGL RENDERER");
 	ImGui::Spacing();
 
-	if (object_hub != nullptr && glfw_display != nullptr)
+	if (scene != nullptr && glfw_display != nullptr)
 	{
 		drawAbout();
 		drawRendering();
@@ -58,13 +58,13 @@ void ImGuiDisplay::draw()
 
 	const ImGuiWindowFlags info_window_flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize /* | ImGuiWindowFlags_NoMove*/;
 	ImGui::Begin("Info Window", &show_x, info_window_flags);
-	if (object_hub != nullptr && glfw_display != nullptr)
+	if (scene != nullptr && glfw_display != nullptr)
 	{
 		drawInfomationWindow();
 	}
 	else
 	{
-		if (object_hub == nullptr)
+		if (scene == nullptr)
 		{
 			ImGui::Text("object render error");
 		}
@@ -77,7 +77,7 @@ void ImGuiDisplay::draw()
 
 	const ImGuiWindowFlags object_window_flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar /*| ImGuiWindowFlags_NoResize /* | ImGuiWindowFlags_NoMove*/;
 	ImGui::Begin("Object Window", &show_x, object_window_flags);
-	if (object_hub != nullptr && glfw_display != nullptr)
+	if (scene != nullptr && glfw_display != nullptr)
 	{
 		drawObjectWindow();
 	}
@@ -169,10 +169,10 @@ void ImGuiDisplay::drawLight()
 	{
 		ImGui::Text("Pos");
 		ImGui::SameLine();
-		ImGui::DragFloat4("##light_position", object_hub->light_position, 0.1f, -100.f, 100.f, "%.2f");
+		ImGui::DragFloat4("##light_position", scene->light_position, 0.1f, -100.f, 100.f, "%.2f");
 		ImGui::Text("Amb");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##light_ambient", object_hub->light_ambient, 0.1f, 0.f, 1.f, "%.2f");
+		ImGui::DragFloat3("##light_ambient", scene->light_ambient, 0.1f, 0.f, 1.f, "%.2f");
 		ImGui::TreePop();
 	}
 }
@@ -202,7 +202,7 @@ void ImGuiDisplay::drawObjectWindow()
 
 		int index = 0;
 		char id_label[32];
-		for (std::shared_ptr<RenderObject> object : object_hub->getObjects())
+		for (std::shared_ptr<RenderObject> object : scene->getObjects())
 		{
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
@@ -219,9 +219,9 @@ void ImGuiDisplay::drawObjectWindow()
 	}
 
 	ImGui::SeparatorText("Details");
-	if (select_id < static_cast<int>(object_hub->getObjects().size()))
+	if (select_id < static_cast<int>(scene->getObjects().size()))
 	{
-		std::shared_ptr<RenderObject> object = object_hub->getObjects().at(select_id);
+		std::shared_ptr<RenderObject> object = scene->getObjects().at(select_id);
 		ImGui::BulletText(object->getName().c_str());
 
 		if (ImGui::TreeNode("Transform"))

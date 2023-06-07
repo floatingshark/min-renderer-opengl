@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,7 +6,7 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-#include "render/object_hub.hpp"
+#include "render/render_scene.hpp"
 #include "render/render_shape.hpp"
 #include "render/render_utility.hpp"
 #include "shading/shading_blinn_phong.hpp"
@@ -31,15 +30,15 @@ int main()
     // opengl 初期化
     RenderUtility::initializeOpenGL();
 
-    // object 生成
-    std::shared_ptr<ObjectHub> object_hub = std::make_shared<ObjectHub>();
-    object_hub->setGlfwHandler(glfw_display);
+    // scene 生成
+    std::shared_ptr<RenderScene> scene = std::make_shared<RenderScene>();
+    scene->setGlfwHandler(glfw_display);
 
     // ImGui 設定
     const char *glsl_version = "#version 430";
     std::unique_ptr<ImGuiDisplay> imgui_display = std::make_unique<ImGuiDisplay>(glfw_display->getGLFWWindow(), glsl_version);
     imgui_display->setDisplayHundle(glfw_display);
-    imgui_display->setObjectHundle(object_hub);
+    imgui_display->setSceneHundle(scene);
 
     while (glfw_display && !glfw_display->getShouldWindowClose())
     {
@@ -49,8 +48,8 @@ int main()
         // バッファーをクリア
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // オブジェクト更新
-        object_hub->update();
+        // シーン更新
+        scene->update();
 
         // ImGui 描画
         imgui_display->draw();

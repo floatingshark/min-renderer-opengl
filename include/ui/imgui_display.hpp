@@ -3,7 +3,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include "render/object_hub.hpp"
+#include "render/render_scene.hpp"
 
 class ImGuiDisplay
 {
@@ -20,11 +20,11 @@ public:
 
 	inline ImGuiIO *getIO() const { return IO; }
 	inline void setDisplayHundle(std::shared_ptr<GLFWdisplay> handle) {glfw_display = handle;};
-	inline void setObjectHundle(std::shared_ptr<ObjectHub> handle) { object_hub = handle; };
+	inline void setSceneHundle(std::shared_ptr<RenderScene> handle) { scene = handle; };
 
 private:
 	std::shared_ptr<GLFWdisplay> glfw_display;
-	std::shared_ptr<ObjectHub> object_hub;
+	std::shared_ptr<RenderScene> scene;
 
 	void drawAbout();
 	void drawRendering();
