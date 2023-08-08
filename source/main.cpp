@@ -19,7 +19,7 @@
 
 int main()
 {
-    std::cout << "begin" << std::endl;
+    std::cout << "[LOG]BEGIN RENDERER" << std::endl;
 
     // glfw 設定
     const char *glfw_window_title = "OpenGL Renderer";
@@ -58,7 +58,7 @@ int main()
         glfw_display->swapBuffers();
     }
 
-    std::cout << "completed" << std::endl;
+    std::cout << "[LOG]FINISH PROGRAM" << std::endl;
 
     return 0;
 }

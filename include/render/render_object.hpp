@@ -9,7 +9,6 @@
 
 #include "render/render_shape.hpp"
 #include "shading/shading_base.hpp"
-#include "shading/shading_blinn_phong.hpp"
 
 /**
  * each object in renderer
@@ -24,6 +23,8 @@ public:
 
 	void update();
 	void refreshShape();
+	void switchShader(ShaderType nex_shader);
+	void switchShape(ShapeType new_shape);
 
 	inline std::shared_ptr<RenderShape> getShape() { return shape; };
 	inline std::shared_ptr<ShadingBase> getShader() { return shader; };

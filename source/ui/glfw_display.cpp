@@ -119,6 +119,7 @@ void GLFWdisplay::cursorPositionCallback(GLFWwindow *window, double xpos, double
 			const float angle_xy_rad = angle_xy_sign * glm::acos(dot_xy);
 			const glm::mat4 xy_rotate_vector_matrix = glm::rotate(glm::mat4(1.f), angle_xy_rad, glm::vec3(0.f, 0.f, 1.f));
 			const glm::vec4 xy_rotate_vector = xy_rotate_vector_matrix * glm::vec4(0.f, 1.f, 0.f, 1.f);
+			// left click move
 			if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 			{
 				const glm::mat4 x_rotate_mat = glm::rotate(glm::mat4(1.f), -x_move * move_scale, glm::vec3(0.f, 0.f, 1.f));
@@ -128,6 +129,7 @@ void GLFWdisplay::cursorPositionCallback(GLFWwindow *window, double xpos, double
 				instance->camera_position[1] = dest_pos[1];
 				instance->camera_position[2] = dest_pos[2];
 			}
+			// left click + shift move
 			else
 			{
 				instance->camera_position[0] += -x_move * xy_rotate_vector[0] * move_scale;

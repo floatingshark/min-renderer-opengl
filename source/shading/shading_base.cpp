@@ -98,17 +98,17 @@ void ShadingBase::initializeUniformVariables()
 
 void ShadingBase::initializeUniformLocations()
 {
-	model_matrix_location = glGetUniformLocation(shader_program, "u_m4_model_matrix");
-	view_matrix_location = glGetUniformLocation(shader_program, "u_m4_view_matrix");
-	projection_matrix_location = glGetUniformLocation(shader_program, "u_m4_projection_matrix");
-	rotate_normal_matrix_location = glGetUniformLocation(shader_program, "u_m4_rotate_normal_matrix");
+	model_matrix_location = glGetUniformLocation(shader_program, "u_ModelMatrix");
+	view_matrix_location = glGetUniformLocation(shader_program, "u_ViewMatrix");
+	projection_matrix_location = glGetUniformLocation(shader_program, "u_ProjectionMatrix");
+	rotate_normal_matrix_location = glGetUniformLocation(shader_program, "u_RotateNormalMatrix");
 
-	camera_position_location = glGetUniformLocation(shader_program, "u_f3_camera_position");
-	light_position_location = glGetUniformLocation(shader_program, "u_f4_light_position");
-	light_ambient_location = glGetUniformLocation(shader_program, "u_f3_light_ambient");
+	camera_position_location = glGetUniformLocation(shader_program, "u_CameraPosition");
+	light_position_location = glGetUniformLocation(shader_program, "u_LightPosition");
+	light_ambient_location = glGetUniformLocation(shader_program, "u_LightAmbient");
 
-	texture_location = glGetUniformLocation(shader_program, "u_i_texture");
-	normal_texture_location = glGetUniformLocation(shader_program, "u_i_normal_texture");
+	texture_location = glGetUniformLocation(shader_program, "u_Texture");
+	normal_texture_location = glGetUniformLocation(shader_program, "u_TextureNormal");
 }
 
 void ShadingBase::assignUniformVariables()

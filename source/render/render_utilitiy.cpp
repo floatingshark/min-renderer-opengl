@@ -30,7 +30,7 @@ void RenderUtility::initializeOpenGL()
 	glDebugMessageCallback(errorCallbackFunction, nullptr);
 }
 
-void RenderUtility::setBackgroundColor(const float color[4])
+void RenderUtility::setClearColor(const float color[4])
 {
 	glClearColor(color[0], color[1], color[2], color[3]);
 }
@@ -129,54 +129,38 @@ void RenderUtility::unbindTexture(GLuint tex_id)
 	{
 		return;
 	}
-	
+
 	setActiveTexture(tex_id - 1);
 	glDeleteTextures(1, &tex_id);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-GLboolean RenderUtility::printShaderInfoLog(GLuint shader, const char *str)
+bool RenderUtility::readShaderSource(const char *name, std::vector<GLchar> &buffer)
 {
-	GLint status;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE)
-		std::cerr << "Compile Error in " << str << std::endl;
+	if (name == NULL)
+		return false;
 
-	GLsizei bufSize;
-	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &bufSize);
-	if (bufSize > 1)
+	std::ifstream file(name, std::ios::binary);
+	if (file.fail())
 	{
-		std::vector<GLchar> infoLog(bufSize);
-		GLsizei length;
-		glGetShaderInfoLog(shader, bufSize, &length, &infoLog[0]);
-		std::cerr << &infoLog[0] << std::endl;
-	}
-	return static_cast<GLboolean>(status);
-}
-
-GLboolean RenderUtility::printProgramInfoLog(GLuint program)
-{
-	GLint status;
-	glGetProgramiv(program, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		std::cerr << "Link Error." << std::endl;
-	}
-	else if (status == GL_TRUE)
-	{
-		std::cout << "Link Program" << std::endl;
+		std::cerr << "Error: Can't open source file: " << name << std::endl;
+		return false;
 	}
 
-	GLsizei bufSize;
-	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufSize);
-	if (bufSize > 1)
+	file.seekg(0L, std::ios::end);
+	GLsizei length = static_cast<GLsizei>(file.tellg());
+	buffer.resize(length + 1);
+	file.seekg(0L, std::ios::beg);
+	file.read(buffer.data(), length);
+	buffer[length] = '\0';
+	if (file.fail())
 	{
-		std::vector<GLchar> infoLog(bufSize);
-		GLsizei length;
-		glGetProgramInfoLog(program, bufSize, &length, &infoLog[0]);
-		std::cerr << &infoLog[0] << std::endl;
+		std::cerr << "Error: Could not read souce file: " << name << std::endl;
+		file.close();
+		return false;
 	}
-	return static_cast<GLboolean>(status);
+	file.close();
+	return true;
 }
 
 GLuint RenderUtility::createProgram(const char *vsrc, const char *fsrc)
@@ -210,36 +194,56 @@ GLuint RenderUtility::createProgram(const char *vsrc, const char *fsrc)
 	glLinkProgram(program);
 
 	if (printProgramInfoLog(program))
+	{
 		return program;
-
-	glDeleteProgram(program);
-	return 0;
+	}
+	else
+	{
+		glDeleteProgram(program);
+		return 0;
+	}
 }
 
-bool RenderUtility::readShaderSource(const char *name, std::vector<GLchar> &buffer)
+GLboolean RenderUtility::printShaderInfoLog(GLuint shader, const char *str)
 {
-	if (name == NULL)
-		return false;
+	GLint status;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE)
+		std::cerr << "Compile Error in " << str << std::endl;
 
-	std::ifstream file(name, std::ios::binary);
-	if (file.fail())
+	GLsizei bufSize;
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &bufSize);
+	if (bufSize > 1)
 	{
-		std::cerr << "Error: Can't open source file: " << name << std::endl;
-		return false;
+		std::vector<GLchar> infoLog(bufSize);
+		GLsizei length;
+		glGetShaderInfoLog(shader, bufSize, &length, &infoLog[0]);
+		std::cerr << &infoLog[0] << std::endl;
+	}
+	return static_cast<GLboolean>(status);
+}
+
+GLboolean RenderUtility::printProgramInfoLog(GLuint program)
+{
+	GLint status;
+	glGetProgramiv(program, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		std::cerr << "[LOG]LINK SHADER ERROR." << std::endl;
+	}
+	else if (status == GL_TRUE)
+	{
+		std::cout << "[LOG]LINK SHADER PROGRAM" << std::endl;
 	}
 
-	file.seekg(0L, std::ios::end);
-	GLsizei length = static_cast<GLsizei>(file.tellg());
-	buffer.resize(length + 1);
-	file.seekg(0L, std::ios::beg);
-	file.read(buffer.data(), length);
-	buffer[length] = '\0';
-	if (file.fail())
+	GLsizei bufSize;
+	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufSize);
+	if (bufSize > 1)
 	{
-		std::cerr << "Error: Could not read souce file: " << name << std::endl;
-		file.close();
-		return false;
+		std::vector<GLchar> infoLog(bufSize);
+		GLsizei length;
+		glGetProgramInfoLog(program, bufSize, &length, &infoLog[0]);
+		std::cerr << &infoLog[0] << std::endl;
 	}
-	file.close();
-	return true;
+	return static_cast<GLboolean>(status);
 }

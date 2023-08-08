@@ -17,6 +17,11 @@ enum class TextureType
 	Surface,
 	Normal
 };
+enum class ShaderType
+{
+	BlinnPhong,
+	PBR
+};
 
 class ShadingBase
 {
@@ -25,6 +30,8 @@ public:
 	~ShadingBase(){};
 	ShadingBase(ShadingBase const &) = delete;
 	ShadingBase &operator=(ShadingBase const &) = delete;
+
+	virtual ShaderType getShaderType() = 0;
 
 	virtual void update();
 	virtual void draw() const;

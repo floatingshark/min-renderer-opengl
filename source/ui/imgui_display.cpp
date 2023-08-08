@@ -121,7 +121,7 @@ void ImGuiDisplay::drawRendering()
 		static float background_color[4];
 		if (ImGui::DragFloat4("##bg rgba", background_color, 0.01f, 0.f, 1.f))
 		{
-			RenderUtility::setBackgroundColor(background_color);
+			RenderUtility::setClearColor(background_color);
 		}
 		static bool enableCullFace = true;
 		if (ImGui::Checkbox("GL_CULL_FACE", &enableCullFace))
@@ -222,7 +222,7 @@ void ImGuiDisplay::drawObjectWindow()
 	if (select_id < static_cast<int>(scene->getObjects().size()))
 	{
 		std::shared_ptr<RenderObject> object = scene->getObjects().at(select_id);
-		ImGui::BulletText(object->getName().c_str());
+		ImGui::Text(("[" + object->getName() + "]").c_str());
 
 		if (ImGui::TreeNode("Transform"))
 		{
@@ -246,6 +246,39 @@ void ImGuiDisplay::drawObjectWindow()
 			if (ImGui::DragFloat3("##object_scale", object_scale.data(), 0.1f, -100.f, 100.f))
 			{
 				object->setScale(object_scale);
+			}
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Shading"))
+		{
+			ImGui::Text("Shader Type");
+			const char *shader_type_enums[] = {"Blinn Phong", "PBR"};
+			static int shader_type_int = static_cast<int>(object->getShader()->getShaderType());;
+			if (ImGui::Combo("##Shader Types", &shader_type_int, shader_type_enums, IM_ARRAYSIZE(shader_type_enums)))
+			{
+				const ShaderType shader_type = static_cast<ShaderType>(shader_type_int);
+				object->switchShader(shader_type);
+				object->refreshShape();
+			}
+
+			ImGui::Text("Shape Type");
+			const char *shape_type_enums[] = {"Plane", "Cube", "Sphere"};
+			static int shape_type_int = static_cast<int>(object->getShape()->getShapeType());
+			if (ImGui::Combo("##Shape Types", &shape_type_int, shape_type_enums, IM_ARRAYSIZE(shape_type_enums)))
+			{
+				const ShapeType shape_type = static_cast<ShapeType>(shape_type_int);
+				object->switchShape(shape_type);
+				object->refreshShape();
+			}
+
+			ImGui::Text("Draw Type");
+			const char *draw_type_enums[] = {"Points", "Lines", "Triangles"};
+			static int draw_type_int = static_cast<int>(object->getShader()->getDrawType());
+			if (ImGui::Combo("##Draw Types", &draw_type_int, draw_type_enums, IM_ARRAYSIZE(draw_type_enums)))
+			{
+				const DrawType draw_type = static_cast<DrawType>(draw_type_int);
+				object->getShader()->setDrawType(draw_type);
 			}
 			ImGui::TreePop();
 		}
@@ -330,33 +363,6 @@ void ImGuiDisplay::drawObjectWindow()
 				object->getShader()->setBaseColor(TextureType::Surface, unsigned_color);
 			}
 
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Shape"))
-		{
-			ImGui::Text("Shape Type");
-			const char *shape_type_enums[] = {"Plane", "Cube", "Sphere"};
-			static int shape_type_int = static_cast<int>(object->getShape()->getShapeType());
-			if (ImGui::Combo("##Shape Types", &shape_type_int, shape_type_enums, IM_ARRAYSIZE(shape_type_enums)))
-			{
-				const ShapeType shape_type = static_cast<ShapeType>(shape_type_int);
-				object->getShape()->setShapeType(shape_type);
-				object->refreshShape();
-			}
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Rendering"))
-		{
-			ImGui::Text("Draw Type");
-			const char *draw_type_enums[] = {"Points", "Lines", "Triangles"};
-			static int draw_type_int = static_cast<int>(object->getShader()->getDrawType());
-			if (ImGui::Combo("##Draw Types", &draw_type_int, draw_type_enums, IM_ARRAYSIZE(draw_type_enums)))
-			{
-				const DrawType draw_type = static_cast<DrawType>(draw_type_int);
-				object->getShader()->setDrawType(draw_type);
-			}
 			ImGui::TreePop();
 		}
 	}

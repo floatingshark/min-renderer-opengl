@@ -12,25 +12,6 @@ RenderShape::RenderShape()
 	makeCubeVertex();
 }
 
-void RenderShape::setShapeType(const ShapeType new_type)
-{
-	shape_type = new_type;
-	switch (shape_type)
-	{
-	case ShapeType::Plane:
-		makePlaneVertex();
-		break;
-	case ShapeType::Cube:
-		makeCubeVertex();
-		break;
-	case ShapeType::Sphere:
-		makeSphereVertex();
-		break;
-	default:
-		break;
-	}
-}
-
 void RenderShape::makePlaneVertex()
 {
 	vertex_position = plane_position;
@@ -53,6 +34,7 @@ void RenderShape::makeSphereVertex()
 {
 	const int slices(16), stacks(8);
 	std::vector<std::vector<GLfloat>> sphere_position;
+	std::vector<std::vector<GLfloat>> sphere_uv;
 	for (int j = 0; j <= stacks; ++j)
 	{
 		const float t(static_cast<float>(j) / static_cast<float>(stacks));
@@ -63,6 +45,8 @@ void RenderShape::makeSphereVertex()
 			const float z(r * cos(6.283185f * s)), x(r * sin(6.283185f * s));
 			const std::vector<GLfloat> vert = {x, y, z};
 			sphere_position.emplace_back((vert));
+			const std::vector<GLfloat> uv = {(float)j / stacks, (float)i / slices};
+			sphere_uv.emplace_back(uv);
 		}
 	}
 
@@ -87,6 +71,8 @@ void RenderShape::makeSphereVertex()
 	vertex_position = sphere_position;
 	vertex_normal = sphere_position;
 	vertex_index = sphere_index;
+	vertex_uv = sphere_uv;
+	vertex_tangent = calculateTangent();
 }
 
 std::vector<std::vector<GLfloat>> RenderShape::calculateTangent()

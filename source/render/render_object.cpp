@@ -5,6 +5,9 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
+#include "shading/shading_blinn_phong.hpp"
+#include "shading/shading_pbr.hpp"
+
 RenderObject::RenderObject()
 {
 	shape = std::make_shared<RenderShape>();
@@ -35,6 +38,39 @@ void RenderObject::refreshShape()
 	shader->setShapeVertexIndex(shape->getVertexIndex());
 	shader->setShapeVertexUv(shape->getVertexUv());
 	shader->setShapeVertexTangent(shape->getTangent());
+}
+
+void RenderObject::switchShader(ShaderType new_shader)
+{
+	switch (new_shader)
+	{
+	case ShaderType::BlinnPhong:
+		shader = std::make_shared<ShadingBlinnPhong>();
+		break;
+	case ShaderType::PBR:
+		shader = std::make_shared<ShadingPBR>();
+	default:
+		break;
+	}
+}
+
+void RenderObject::switchShape(ShapeType new_shape)
+{
+	shape->setShapeType(new_shape);
+	switch (new_shape)
+	{
+	case ShapeType::Plane:
+		shape->makePlaneVertex();
+		break;
+	case ShapeType::Cube:
+		shape->makeCubeVertex();
+		break;
+	case ShapeType::Sphere:
+		shape->makeSphereVertex();
+		break;
+	default:
+		break;
+	}
 }
 
 void RenderObject::calculateModelMatrix()

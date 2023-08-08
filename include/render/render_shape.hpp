@@ -22,7 +22,7 @@ public:
 	RenderShape &operator=(RenderShape const &) = delete;
 
 	inline ShapeType getShapeType() const { return shape_type; };
-	void setShapeType(const ShapeType new_type);
+	inline void setShapeType(const ShapeType new_type) {shape_type = new_type;};
 
 	std::vector<GLfloat> getVertexPosition() const { return RenderUtility::flattenVector(vertex_position); };
 	std::vector<GLfloat> getVertexNormal() const { return RenderUtility::flattenVector(vertex_normal); };

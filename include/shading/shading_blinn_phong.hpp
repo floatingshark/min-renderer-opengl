@@ -16,6 +16,7 @@ public:
 	ShadingBlinnPhong(ShadingBlinnPhong const &) = delete;
 	ShadingBlinnPhong &operator=(ShadingBlinnPhong const &) = delete;
 
+	virtual ShaderType getShaderType() override { return ShaderType::BlinnPhong; };
 	void update() override;
 
 	inline std::vector<GLfloat> getMaterialAmbient() { return material_ambient; };
@@ -26,10 +27,11 @@ public:
 	inline void setMaterialSpecular(std::vector<GLfloat> new_specular) { material_specular = new_specular; };
 	inline GLfloat getMaterialShiness() { return material_shiness; };
 	inline void setMaterialShiness(GLfloat new_shiness) { material_shiness = new_shiness; };
+
 protected:
 	// shader
-	const char *vert_shader_name = "shader/blinn_phong_vert.glsl";
-	const char *frag_shader_name = "shader/blinn_phong_frag.glsl";
+	const char *vert_shader_name = "shader/blinn_phong.vert";
+	const char *frag_shader_name = "shader/blinn_phong.frag";
 
 	// additional uniform location
 	GLint material_ambient_location;
